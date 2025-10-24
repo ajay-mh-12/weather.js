@@ -225,6 +225,8 @@ async function getUvIndex(lati,longi){
  }
 
 
+//....CLOUD IMAGE CHANGE....//
+
    function CLOUD(wool){
       let condition = wool.weather[0].description;
   
@@ -244,6 +246,9 @@ async function getUvIndex(lati,longi){
    }
 
    }
+
+
+//....CURRENT WEEKDAY...//
 
    function WEEK(){
       const date = new Date()
