@@ -29,15 +29,16 @@ function permission(){
       let lon = position.coords.longitude;
       const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=de753d1bfc9b1dd6a1586c923f3e429a`);
       const data = await res.json();
+      
       mainTemp(data);
       place.textContent = data.name;
       minmaxTemp(data);
       SUN(data);
       Humidity(data);
-      Day(latitude,longitude);
-      getUvIndex(latitude,longitude);
+      Day(lat,lon);
+      getUvIndex(lat,lon);
       city = data.name;
-      AirQuality();
+      airQuality(city);
       CLOUD(data);
 
    }
@@ -46,14 +47,18 @@ function permission(){
    }
    success();
 }
-permission()
+permission();
 
+
+//.....SERACH BUTTON FUNCTION .....//
 
  button.addEventListener("click",() => {
      city = search.value;
       console.log(city)
-      weather()
- })
+      weather();
+ });
+
+// .... MAIN WEATHER FUNCTION ....//
 
 async function weather() {
     const res = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=de753d1bfc9b1dd6a1586c923f3e429a`)
@@ -67,11 +72,14 @@ async function weather() {
     let latitudes = data.coord.lat;
     let longitudes = data.coord.lon;
     Day(latitudes,longitudes);
+    let cityName = data.name;
     getUvIndex(latitudes,longitudes);
-    Airquality()
-    CLOUD(data)
+    airQuality(cityName);
+    CLOUD(data);
 }
 
+
+//... TEMPERATURE HANDLERS....//
 
 function mainTemp(dataa) {
    let temp = dataa.main.temp
@@ -85,10 +93,15 @@ function minmaxTemp(item){
    maxtemperature.textContent = `Max Temperature-${(maxtemp - 273.15).toFixed(0)}°C`;
 }
 
+// ...SUNRISE & SUNSET... //
+
 function SUN(items){
     SunRise.textContent = `${new Date( items.sys.sunrise * 1000).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',hour12: true})}`;
     SunSet.textContent = `${new Date(items.sys.sunset * 1000).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',hour12: true})}`; 
 }
+
+
+//... HUMIDITY & PRESSURE ...//
 
 function Humidity(element){
     pressure.textContent = element.main.pressure;
@@ -96,6 +109,8 @@ function Humidity(element){
     SPEED.textContent = `${(element.wind.speed).toFixed(1)}km/h`
 }
 
+
+//... DAILY FORECAST ...//
 
 async function Day(lat,long){
       const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&daily=temperature_2m_max,temperature_2m_min&timezone=auto`)
@@ -131,6 +146,7 @@ async function Day(lat,long){
    }
 
 
+//....UV INDEX .....//
 
 async function getUvIndex(lati,longi){
    const rest = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lati}&longitude=${longi}&daily=uv_index_max&forecast_days=1`)
@@ -159,9 +175,9 @@ async function getUvIndex(lati,longi){
   
  }
 
+// ...AIR QUALITY...//
 
-
- async function Airquality(){
+ async function airQuality(city){
    const remort = await fetch(`https://api.api-ninjas.com/v1/airquality?city=${city}`, {
       headers: {
          "X-Api-Key":"6HOrGV0vZn6bLqdihECe1w==uYLyr96jCFmWmz94",
@@ -237,18 +253,4 @@ async function getUvIndex(lati,longi){
       console.log(days[index]);
    }
  WEEK()
- nnbvb ghg ghgh gghhgg ghghgggfgf  ggghdf gfgfgf gfgf gghhg gfgfgf ggfg gfgfhh ggg bbgg 
- jghh ghgg gfghhg gfgf gfgfg gfhhgfnv vgfgfgf gfgfgf bbv gfgg gfgfgf gfgfgf gfgfg gfgfh gfggf gfgfgf gfgf gggf gfgf gghgh ghgh hnhgghh 
- ]fvvc gfgf ggff bvbvgfgf fc gfgf gg fdfd   ggggfgf gfgfgf dfdfdf dfdf fdfdff gfgf gggggf gfggfgf gggf gfgfgf gfgfgf  gfgf ghggh ghgh bbg nhghgh ghgh ghgh ghgh gg gfgfgfgf fggfgf gfgfggggf ggf 
- gfgf gfgf gfggf gfgf gfgfhg gh bgfgf bgfgg ggfgf bvbvbbghgh bggh ghghhg hhbnghb hhjhjjj jhjjh hj hjhj bvbv bvbvbv b bbnkjkj ggggg ghgh ghhg ghgh 
- bbv ghghhghghh ghgh hghg hhgh hhgh hhh hhghg ghhghg ghh hg ghghh ghhhghgh h ghgh ghgh ghhg ghghghgh hgh  hhj ghhg ghgh ghgh ghgh ghgh hgghghhgghh ghghgh hghg hh 
- jjf jjf fff ff fff ggfg fgf gff fg fgf gffg fgff fg fggfffffggvvvcvc vcvcvvcvbvvvcvbbgf gfgfg gfgffgfggf fggfgfgf fggf gfgfgf gfg rtrtrtr  rttrbgf trt gf ggfggff 
- fdfdfdfdfdfdfdfdffdfdfdf fdfdfdfdffddffdvdfdf dfdff dfdfdfdf ffddfdf ffdfdfdfd ddf dfdfdfffddf fdfvcvkjjj jjf gjjkjk  jkjgf kjjgfkj  nbnbnbbhjhjhj gggg ghghgh  nhhgjfjg ghgh 78787huibj njjv jbnbn hhnmhjyu nhjh hbgh h hhbhgghgh gh hjh jjuunniuuiokjnjhj  hjh hjhj hhjhj ghtyvtytyyuy hhjhjyyt hhh 
- hjgy
-
- uyh hjhh bghgh bbbyugh bb bv ghb ghgh gfuyyvyvvyty hhu ghbv gj h gb iuhj  juj ghjgh hbhjbvb h   ju8ubj j h hhg h iuuibb gj gf  bnjbhjh ghgh  ghj  ghfg 
- ghgh k  hjh  hgh yg  g   vbvvb hhghh ju bybyuy njh hu j hhhj jkjkj  jmjnmnm nmh  hgybjkj njkjbnb nmbnm bnbn nmnmnn  bhjh fdgbn  nm nmhjuh ujh hjbjhjh jhjh dffg rf jjv kjuhb kjjbkj kb n jhfjg 
-  hjn b hbgrhb nj mj jij ijfiohbjk vbh yyufvbhbhb hf hh hh ghghj   jghjv kj jj h jhg kjn gff kjj f g  g fg gf ghjkfgjkjk jghhjjj  fj jgjkjkj 
-  hhjfj jvjjghk mmfndf  hjgjj kjgkj iu89u uggy bvhbhggyug vhhjg hghg hhh gvgh bgfgg ghjg hmg  hghgi  hjhjkh gghj hgygyugyu hghjhhj j jhvhghjty ght d 
-  bhbh hh v gjf gjfj kjjhj jhjh jfg jgjjgfjfhjgf gffvbhjhh hjfh jhfjkh jh bhjbf  dfb fbh hf h gf hgf bfb b bbvx   b bbxc c dc  hvb bvb bvb bb bbbb  hjhdf hffdh gg
-  b ghvbcv gcgvh  ggu jhbjn bbjhjhbf kghkjjkjb  jnv bhhh hhhvg h  ghh hhd hdh v zbxb b v c  vdhxv bdh b dh g  ghhjfhff hbghfhghjhjdfhj hj hjfhdhhjdfb mmm nnnhhnm
+ 
